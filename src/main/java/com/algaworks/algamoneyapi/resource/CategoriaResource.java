@@ -2,6 +2,7 @@ package com.algaworks.algamoneyapi.resource;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,8 +46,9 @@ public class CategoriaResource {
 	}
 
 	@GetMapping("/{codigo}")
-	public Categoria buscarPeloCodigo(@PathVariable Long codigo) {
-		return categoriaRepository.findById(codigo).orElse(null);
+	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
+		Optional<Categoria> categoriaOptional = categoriaRepository.findById(codigo);
+		return categoriaOptional.map(categoria -> ResponseEntity.ok(categoria)).orElse(ResponseEntity.notFound().build());
 	}
 
 }
