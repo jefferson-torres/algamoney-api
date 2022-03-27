@@ -22,30 +22,31 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Lancamento {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	private String descricao;
-	
+
 	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo")
 	private TipoLacamento tipoLancamento;
-	
+
 	@Column(name = "data_vencimento")
 	private LocalDate dataVencimento;
-	
+
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
-	
+
 	private BigDecimal valor;
-	
+
 	private String observacao;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	private Categoria categoria;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;

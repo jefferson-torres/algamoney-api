@@ -61,7 +61,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
-		
+
 		<!-- Projeto -->
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
