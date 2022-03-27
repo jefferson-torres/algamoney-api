@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.algaworks.algamoneyapi.model.Lancamento;
 import com.algaworks.algamoneyapi.model.Pessoa;
 import com.algaworks.algamoneyapi.repository.LancamentoRepository;
+import com.algaworks.algamoneyapi.repository.filter.LancamentoFilter;
 import com.algaworks.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
@@ -40,8 +41,8 @@ public class LancamentoService {
 
 	}
 
-	public List<Lancamento> listar() {
-		return lancamentoRepository.findAll();
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
 
 	public Lancamento buscarPorCodigo(Long codigo) {
