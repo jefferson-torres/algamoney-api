@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.algaworks.algamoneyapi.model.Lancamento;
 
 @Repository
-public interface LacamentoRepository extends JpaRepository<Lancamento, Long> {
+public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
 
 }
