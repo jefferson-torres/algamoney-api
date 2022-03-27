@@ -17,12 +17,23 @@ public class PessoaService {
 	
 	@Transactional
 	public Pessoa atualizar(Long codigo, Pessoa pessoa) {
-		Pessoa pessoaSalva = pessoaRepository.findById(codigo).orElseThrow();
+		Pessoa pessoaSalva = buscarPeloCodigo(codigo);
 		
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
 		pessoaRepository.save(pessoaSalva);
 		
 		return pessoaSalva;
+	}
+
+	public Pessoa buscarPeloCodigo(Long codigo) {
+		return pessoaRepository.findById(codigo).orElseThrow();
+	}
+	
+	@Transactional
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		Pessoa pessoaSalva = buscarPeloCodigo(codigo);
+		pessoaSalva.setAtivo(ativo);
+		pessoaRepository.save(pessoaSalva);
 	}
 	
 }
