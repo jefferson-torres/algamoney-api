@@ -48,5 +48,9 @@ public class LancamentoService {
 	public Lancamento buscarPorCodigo(Long codigo) {
 		return lancamentoRepository.findById(codigo).orElseThrow();
 	}
+	
+	public void deletar(Long codigo) {
+		lancamentoRepository.deleteById(codigo);
+	}
 
 }
