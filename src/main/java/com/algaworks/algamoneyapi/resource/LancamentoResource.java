@@ -16,33 +16,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algamoneyapi.event.RecursoCriadoEvent;
 import com.algaworks.algamoneyapi.model.Lancamento;
-import com.algaworks.algamoneyapi.repository.LancamentoRepository;
+import com.algaworks.algamoneyapi.service.LancamentoService;
 
 @RestController
 @RequestMapping("/lancamentos")
 public class LancamentoResource {
 
 	@Autowired
-	private LancamentoRepository lancamentoRepository;
+	private LancamentoService lancamentoService;
 	
 	@Autowired
 	private ApplicationEventPublisher applicationEventPublisher;
 	
 	@PostMapping
 	public Lancamento criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response){
-		Lancamento lancamentoSalvo =  lancamentoRepository.save(lancamento);
+		Lancamento lancamentoSalvo =  lancamentoService.salvar(lancamento);
 		applicationEventPublisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
 		return lancamentoSalvo;
 	}
 	
 	@GetMapping
 	public List<Lancamento> listar(){
-		return lancamentoRepository.findAll();
+		return lancamentoService.listar();
 	}
 	
 	@GetMapping("/{codigo}")
 	public Lancamento buscarPorCodigo(@PathVariable Long codigo){
-		return lancamentoRepository.findById(codigo).orElseThrow();
+		return lancamentoService.buscarPorCodigo(codigo);
 	}
 	
 }

@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.algaworks.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -85,6 +87,12 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 		return Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 	}
 
+	private List<Erro> criarListaErros(Exception ex, String mensagem, String mensagemDesenvolvedor) {
+		String mensagemUsuario = messageSource.getMessage(mensagem, null, LocaleContextHolder.getLocale());
+
+		return Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+	}
+	
 	private List<Erro> criarListaErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 
@@ -105,5 +113,14 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 		private String mensagemUsuario;
 		private String mensagemDesenvolvedor;
 	}
+	
+	
+	//Regras de negócio
+	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
+	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex, WebRequest request) {
+		List<Erro> erros = criarListaErros(ex, "pessoa.inexistente-ou-inativa", ex.toString());
 
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 }
