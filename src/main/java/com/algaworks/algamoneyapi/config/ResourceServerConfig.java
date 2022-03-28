@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -28,16 +29,16 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @Configuration
 @EnableWebSecurity
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
-     
+    
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin@algamoney.com")
-                .password("admin")
-                .roles("ROLE");
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Override
+	@Override
     public void configure(HttpSecurity http) throws Exception {
         
         http.authorizeRequests()
@@ -62,17 +63,6 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
     protected AuthenticationManager authenticationManager() throws Exception {        
         return super.authenticationManager();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
-        
-    @Bean
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-    	return super.userDetailsServiceBean();
-    }
     
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
@@ -94,5 +84,10 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter{
 		});
 
 		return jwtAuthenticationConverter;
+	}
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
