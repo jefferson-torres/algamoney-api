@@ -13,6 +13,7 @@ import com.algaworks.algamoneyapi.model.Lancamento;
 import com.algaworks.algamoneyapi.model.Pessoa;
 import com.algaworks.algamoneyapi.repository.LancamentoRepository;
 import com.algaworks.algamoneyapi.repository.filter.LancamentoFilter;
+import com.algaworks.algamoneyapi.repository.projection.ResumoLancamento;
 import com.algaworks.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
@@ -52,6 +53,10 @@ public class LancamentoService {
 	
 	public void deletar(Long codigo) {
 		lancamentoRepository.deleteById(codigo);
+	}
+
+	public Page<ResumoLancamento> resumo(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 
 }
